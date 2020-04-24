@@ -1,0 +1,4 @@
+{
+    "mongouri": "mongodb+srv://taskapp:thisisIrene123@cluster0-nrpkf.mongodb.net/go-dutch?retryWrites=true&w=majority",
+    "jwtSecret": "dutchlearning1011"
+}
