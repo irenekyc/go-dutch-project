@@ -7,7 +7,7 @@ import Register from './components/Register'
 
 import Collections  from './components/Collections/Collections'
 import Collection from './components/Collections/Collection'
-import CollectionForm from './components/Collections/CollectionForm'
+import CollectionForm from './components/Collections/Add-Collections/CollectionForm'
 
 import Dashboard from './components/Profile/Dashboard'
 import ProfileForm from './components/Profile/ProfileForm'
@@ -31,7 +31,7 @@ function App() {
               <Route path="/collections/:id" component={Collection} />
               <Route exact path="/dashboard" component={Dashboard} />
               <Route exact path="/edit-profile" component={ProfileForm} />
-              <Route exact path="/add-collection" component={CollectionForm} />
+              <Route exact path="/add-collections" component={CollectionForm} />
             </Switch>
           </section>
         

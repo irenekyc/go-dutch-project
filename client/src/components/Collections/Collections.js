@@ -1,36 +1,46 @@
-import React, {Fragment} from 'react'
-import {Link} from 'react-router-dom'
+import React, {Fragment, useEffect, useState} from 'react'
+import axios from 'axios'
+import CollectionCard from './CollectionCard'
 
-const Register = ()=>{
+const Collections = ()=>{
+
+    const [data, setData]= useState({
+        collections: [],
+        dataReady: false
+    })
+
+    useEffect(()=>{
+        loadData()
+    }, [])
+
+    const { collections , dataReady } = data
+
+    const loadData = async ()=>{
+        const res = await axios.get('api/collections/')
+
+        setData({
+            collections: res.data,
+            dataReady: true
+        })
+    }
 
     return(
          <Fragment>
-              <h1 className="large text-primary-blue"> Collections </h1>
+    
+               <h1 className="large text-primary-blue"> Collections </h1>
               <p className="lead"> <i className="fas fa-book-open"></i> Start your learning journey </p>
-            <div className="collections">
 
-                <div className="collection bg-light">
-                  <span><i className="fas fa-book"></i> 
-                    <Link to="/collections/123"> 
-                        <span className="link-primary"> <strong> Basic Conversation</strong></span></Link> 
-                     </span> 
-                    <p className="small link-blue" href="login.html"> <i className="fas fa-plus"></i> Add to my collections </p>
-                </div>
-
-                <div className="collection bg-light">
-                    <span><i className="fas fa-book"></i><a href="collection.html" className="link-primary"> <strong> Numbers</strong></a> </span> 
-                    <a className="small link-blue" href="login.html"><i className="fas fa-plus"></i> Add to my collections </a>
+              {dataReady? <Fragment>  
+                  <div className="collections">
+                    {collections.map(collection => <CollectionCard key={collection._id} data={collection} />)}
                  </div>
 
-                <div className="collection bg-light">
-                    <span><i className="fas fa-book"></i><a href="collection.html" className="link-primary"> <strong> Travel Essentials</strong></a> </span> 
-                    <a className="small link-blue" href="login.html"> <i className="fas fa-plus"></i> Add to my collections </a>
-                </div>  
-            </div>
+                     </Fragment> : null}
+           
    
          </Fragment>
 
     )
 }
 
-export default Register
+export default Collections

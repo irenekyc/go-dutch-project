@@ -1,13 +1,17 @@
 import React, { Fragment, useState } from 'react'
 import ContentForm from './ContentForm'
+import axios from 'axios'
 
 
 const CollectionForm = ()=>{
     const [formData, setFormData ] = useState({
-        collection: "",
+        name: "",
         authRequired: false,
         contentReady: false,
+        collectionId: null
     })
+
+    const {name, authRequired } = formData
 
     const onChangeHandler = (e)=>{
         setFormData({
@@ -24,14 +28,31 @@ const CollectionForm = ()=>{
         })
     }
 
-
     const onSubmitHandler =(e)=>{
         e.preventDefault()
-        setFormData({
-            ...formData,
-            contentReady: true
-        })
+        submitData(name, authRequired)
+    }
 
+    const submitData = async ()=>{
+        try{
+            const config = {
+                headers:{
+                    "Content-Type" : "application/JSON"
+                }
+            }
+            const res = await axios.post('/api/collections/createCollections/', { name, authRequired}, config)
+        
+            setFormData({
+                ...formData,
+                contentReady: true,
+                collectionId: res.data._id
+            })
+
+        }
+        catch(err){
+            console.log(err)
+        }
+        
     }
 
     return(
@@ -41,21 +62,21 @@ const CollectionForm = ()=>{
             
           
             <div className="form-group">
-                <input type="text" placeholder="Collection Name" value={formData.collection} name="collection" onChange={e=> onChangeHandler(e)}/>
+                <input type="text" placeholder="Collection Name" value={name} name="name" onChange={e=> onChangeHandler(e)}/>
             </div>
 
             <div className="form-group">
                 <p> Accessibility</p>
                 <small> Please indicate if login is required for this collection</small>
                 <p>
-                <input type="checkbox" name="authRequired" value={formData.authRequired} id="authRequired" onChange={checkBoxHandler}/>
+                <input type="checkbox" name="authRequired" value={authRequired} id="authRequired" onChange={checkBoxHandler}/>
                 <label for ="authRequired" className="btn-toggle"> toggle </label></p>
         
             </div>
            <input type="submit" className="btn btn-primary-blue" value="Next" />
            </form>
            
-           {formData.contentReady? <ContentForm /> : null}
+           {formData.contentReady? <ContentForm collectionId={formData.collectionId}/> : null}
             
         </Fragment>
     )
