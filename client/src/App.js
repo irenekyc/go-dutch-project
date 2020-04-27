@@ -4,6 +4,7 @@ import Landing from './layout/Landing'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 import Login from './components/Login'
 import Register from './components/Register'
+import Logout from './components/Logout'
 
 import Collections  from './components/Collections/Collections'
 import Collection from './components/Collections/Collection'
@@ -12,12 +13,14 @@ import CollectionForm from './components/Collections/Add-Collections/CollectionF
 import Dashboard from './components/Profile/Dashboard'
 import ProfileForm from './components/Profile/ProfileForm'
 
+import { Provider } from 'react-redux'
+import store from './store'
 
-
-import './App.css';
 
 function App() {
+ 
   return (
+  <Provider store={store}>
     <Router>
       <Fragment>
         <Navbar />
@@ -26,6 +29,7 @@ function App() {
           <section className="container">
             <Switch>
               <Route exact path="/login" component={Login} />
+              <Route exact path="/logout" component={Logout} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/collections" component={Collections} />
               <Route path="/collections/:id" component={Collection} />
@@ -37,6 +41,7 @@ function App() {
         
       </Fragment>
     </Router>
+    </Provider>
   )}
 
 export default App;

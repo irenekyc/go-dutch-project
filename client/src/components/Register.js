@@ -1,9 +1,12 @@
 import React, {Fragment, useState} from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import {useSelector, useDispatch} from 'react-redux'
+import { Link, Redirect } from 'react-router-dom'
+import register from '../actions/register'
 
 
 const Register = ()=>{
+    const dispatch = useDispatch()
+    const isAuth = useSelector(state=> state.Auth.isAuthenticated)
     const [formData, setFormData]= useState({
         name: "",
         email: "",
@@ -22,24 +25,28 @@ const Register = ()=>{
 
     const onSubmitHandler = (e)=>{
         e.preventDefault()
-        submitData(name, email, password)
+        dispatch(register(name, email,password))
     }
 
-    const submitData = async (name, email, password)=>{
-        const config= {
-            headers:{
-                'content-type': "application/JSON"
-            }
-        }
-        try{
-            const res = await axios.post('/api/users/', {name, email, password}, config)
-            console.log(res.data)
-        }
-        catch(err){
-            console.log(err.message)
-
-        }
+    if(isAuth){
+        return <Redirect to="/collections" />
     }
+
+    // const submitData = async (name, email, password)=>{
+    //     const config= {
+    //         headers:{
+    //             'content-type': "application/JSON"
+    //         }
+    //     }
+    //     try{
+    //         const res = await axios.post('/api/users/', {name, email, password}, config)
+    //         console.log(res.data)
+    //     }
+    //     catch(err){
+    //         console.log(err.message)
+
+    //     }
+    // }
 
     return(
          <Fragment>

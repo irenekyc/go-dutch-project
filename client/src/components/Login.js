@@ -1,8 +1,15 @@
 import React, {Fragment, useState} from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, Redirect } from 'react-router-dom'
+import login from '../actions/login'
+
+
 
 const Login = ()=>{
+    const dispatch = useDispatch()
+    const isAuth = useSelector(state => state.Auth.isAuthenticated)
+
+
     const [data, setData]= useState({
         email: "",
         password: ""
@@ -19,26 +26,30 @@ const Login = ()=>{
 
     const onSubmitHandler = (e)=>{
         e.preventDefault()
-        submitData(email, password)
+        dispatch(login(email, password))
+    }
+
+    if(isAuth){
+       return <Redirect to="/collections" />
     }
 
 
-    const submitData = async (email, password)=> {
-        const config ={
-            headers:{
-                'Content-Type': "Application/JSON"
-            }
-        }
-        try{
-            const res = await axios.post('/api/auth', {email, password}, config)
-            console.log(res.data)
+    // const submitData = async (email, password)=> {
+    //     const config ={
+    //         headers:{
+    //             'Content-Type': "Application/JSON"
+    //         }
+    //     }
+    //     try{
+    //         const res = await axios.post('/api/auth', {email, password}, config)
+    //         console.log(res.data)
 
-        }
-        catch(err){
-            console.log(err)
-        }
+    //     }
+    //     catch(err){
+    //         console.log(err)
+    //     }
 
-    }
+    // }
 
     return(
          <Fragment>
