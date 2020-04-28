@@ -2,7 +2,7 @@
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: false,
-    user:null
+
 }
 
 const auth = (state=initialState, action) => {
@@ -14,7 +14,7 @@ const auth = (state=initialState, action) => {
             return{
                 ...state,
                 isAuthenticated: true,
-                token: payload
+                token: payload,
             }
         case "AUTH_FAIL":
         case "REGISTER_FAIL":
@@ -24,10 +24,9 @@ const auth = (state=initialState, action) => {
             }
         case "LOGOUT":
             localStorage.removeItem('token')
-            return{
+               return{
                 token:null,
                 isAuthenticated:false,
-                user:null
             }
         default:
             return state

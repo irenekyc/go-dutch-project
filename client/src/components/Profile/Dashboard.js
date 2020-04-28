@@ -1,16 +1,40 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useDispatch, useSelector} from 'react-redux'
+import { getUser, getProfile} from '../../actions/profile'
+
 
 const Dashboard = ()=>{
+    const dispatch = useDispatch()
+    const [user, setUser]= useState({
+        name: null,
+        email: null,
+        ready: false,
+    })
+
+    const userData = useSelector(state => state.User.user)
+    const profileData = useSelector(state=> state.User.profile)
+
+
+    //load user
+    useEffect(()=>{
+        dispatch(getUser())
+        dispatch(getProfile())
+     
+    }, [getUser])
+
+
+
     return(
         <Fragment>
-             <h1 className="large text-center p-1"> My Dashboard</h1>
+            {userData? <Fragment>
+                <h1 className="large text-center p-1"> My Dashboard</h1>
                 <div className="dashboard-grid">
                     <div className="my-profile bg-light">
-                        <p className="lead"> <span className="text-primary-blue">Hallo!</span> Irene</p>
+                        <p className="lead"> <span className="text-primary-blue">Hallo!</span> {userData.name} </p>
                         <p className="large"><i className="fas fa-user"></i></p>
-                        <p> Location: Hong Kong</p>
-                        <p> Member since: May 2020</p>
+                        {profileData && profileData.location? <p> Location: {profileData.location} </p>  : <p> *Tell us about your location</p>} 
+                        <p> Member since: {userData.date}</p>
                         <p><i className="fas fa-crown"></i> Beginner </p>
                         <div className="buttons"> 
                             <Link to="/edit-profile"><p className="btn btn-primary"><i className="fas fa-edit"></i> Edit </p></Link>
@@ -33,6 +57,9 @@ const Dashboard = ()=>{
                     <p> Features coming soon </p>
                  </div>
          </div>
+         </Fragment>
+                : null}
+             
         </Fragment>
 
     )

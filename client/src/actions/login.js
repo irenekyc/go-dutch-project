@@ -2,9 +2,6 @@ import setAuthToken from '../utilies/setAuthToken'
 import axios from 'axios'
 
 const login =  (email, password)=> async dispatch =>{
-    if (localStorage.token){
-        setAuthToken(localStorage.token)
-    }
     try{
         const config = {
             headers:{
@@ -17,6 +14,8 @@ const login =  (email, password)=> async dispatch =>{
             type: "LOGIN_SUCCESS",
             payload: res.data.token
         })
+
+        setAuthToken(res.data.token)
     }
     catch(err){
         dispatch({

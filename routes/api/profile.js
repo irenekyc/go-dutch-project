@@ -3,6 +3,7 @@ const router = express.Router()
 const auth = require ('../../middleware/auth')
 const Profile = require ('../../models/Profile')
 const { check, validationResult} = require ('express-validator')
+const User = require ('../../models/User')
 
 
 //@route Get api/profile/me
@@ -12,7 +13,7 @@ const { check, validationResult} = require ('express-validator')
 router.get('/me', auth, async (req, res)=>{
     const userId = req.user.id
     try{
-        const profile = await Profile.findOne({user: userId})
+        const profile = await Profile.findOne({user: userId}).populate('user')
         if(!profile){
             return res.json("Please create a profile")
         }
@@ -33,7 +34,10 @@ router.get('/me', auth, async (req, res)=>{
 
 router.post('/me', [ auth, [
     check('bio').exists(),
-    check('location').exists()
+    check('location').exists(),
+    check('name').exists(),
+    check('email').exists(),
+    check ('password').exists()
 ]], async (req, res)=>{
     const errors = validationResult(req)
     if (!errors.isEmpty()){
@@ -41,13 +45,15 @@ router.post('/me', [ auth, [
     }
 
     const userId = req.user.id
-    const { bio, location } = req.body
+    const { bio, location, name, email, password } = req.body
     try{
         const profile = new Profile({
             user: userId,
             bio,
             location
         })
+
+        await User.findOneAndUpdate({user: userId}, {name, email, password})
         await profile.save()
         res.json(profile)
        

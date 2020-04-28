@@ -5,6 +5,7 @@ const { check, validationResult} = require ('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const config = require ('config')
+const auth = require ('./auth')
 
 
 // @Route           POST api/users
@@ -55,6 +56,22 @@ router.post('/', [
         res.status(500).send("Server Error")
     }
    
+})
+
+// @Route           GET api/users
+// @ Descriptions   Get User data
+// @access          Private
+
+router.get('/', auth, async(req, res)=>{
+    const userId = req.user.id
+    try {
+        const user = await User.findById(userId)
+        console.log(user)
+        res.json(user)
+    }catch(err){
+        res.status(500).send("Server Error")
+    }
+
 })
 
 
