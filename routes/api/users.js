@@ -65,7 +65,7 @@ router.post('/', [
 router.get('/', auth, async(req, res)=>{
     const userId = req.user.id
     try {
-        const user = await User.findById(userId)
+        const user = await User.findById(userId).populate('favourites', ['id','name'])
         console.log(user)
         res.json(user)
     }catch(err){
@@ -73,6 +73,29 @@ router.get('/', auth, async(req, res)=>{
     }
 
 })
+
+// @Route           PUT api/users
+// @ Descriptions   Update User data
+// @access          Private
+
+router.put('/', auth, async(req, res)=>{
+
+    const {id, name, email, location, bio } = req.body
+    console.log(req.body)
+    try {
+        const user = await User.findById(id)
+        user.name=name
+        user.email=email
+        user.bio = bio || null
+        user.location = location || null
+        await user.save()
+        res.json(user)
+    }catch(err){
+        res.status(500).send("Server Error")
+    }
+
+})
+
 
 
 module.exports = router

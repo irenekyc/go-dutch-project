@@ -3,7 +3,6 @@ const initialState = {
     loading: true,
     isAuthenticated: false,
     user:null,
-    profile: null,
 }
 
 const user = (state=initialState, action) => {
@@ -16,22 +15,21 @@ const user = (state=initialState, action) => {
                 isAuthenticated: true,
                 user: payload,
             }
-        case "GET_PROFILE":
-            return{
-                ...state,
-                loading: false,
-                isAuthenticated: true,
-                profile: payload,
-            }
         case "CLEAR_USER":
-        case "CLEAR_PROFILE":
             return{
                 ...state,
                 loading: false,
                 isAuthenticated: false,
                 user:null,
-                profile:null,
             }
+        case "UPDATE_USER":
+            return{
+                ...state,
+                loading: false,
+                user: payload,
+            }
+
+
         default:
             return state
     }

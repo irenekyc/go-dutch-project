@@ -1,6 +1,8 @@
 import React, { useState, Fragment} from 'react'
 
+
 const ContentCard = (props) =>{
+
     const totalLength = props.cardData.length
     const [curCard , setCurCard ] = useState({
         index: 0,

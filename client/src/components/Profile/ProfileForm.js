@@ -1,49 +1,30 @@
 import React, { Fragment, useState} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
+import { updateUser} from '../../actions/profile'
 
 const ProfileForm = ()=>{
     const dispatch = useDispatch()
     const userData = useSelector(state => state.User.user)
-    const profileData = useSelector(state=> state.User.profile)
-    console.log('userData')
-    console.log(userData.name)
-    console.log(userData.email)
-    console.log('profileData')
-    console.log(profileData)
 
+    const profileData = useSelector(state=> state.User.user)
 
-    const [dataReady, setDataReady]=useState(false)
-    const [profile, setProfile]= useState({
-        name: " ",
-        email: " ",
-        passowrd: " ",
-        location: " ",
-        bio:" ",
-        newPassword1:"",
-        newPassword2:""
-    })
-    
-    
-    if (!dataReady){
-        setDataReady(true)
-        setProfile({
-            ...profileData,
-            name: userData.name,
-            email: userData.email,
-            passowrd: userData.password,
+    const [newProfile, setnewProfile]=useState(false)
 
-        })
-        if (profileData){
-            return setProfile({
-                ...profile,
-                location: profileData.location,
-                bio: profileData.bio,
-            })
-        }
-       
+    if (profileData == null){
+        setnewProfile(true)
     }
-    const { name, email, password, location, bio, newPassword1, newPassword2} = profile
-
+    const [profile, setProfile]= useState({
+        id: userData._id,
+        name:userData.name,
+        email:userData.email,
+        location:profileData.location || null,
+        bio:profileData.bio || null,
+    
+    })
+    const { id, name, email,  location, bio} = profile
+   
+ 
+        
     const onChangeHandler = (e)=>{
         setProfile({
             ...profile,
@@ -53,10 +34,8 @@ const ProfileForm = ()=>{
 
     const onSubmitHandler = (e)=>{
         e.preventDefault()
-        if(newPassword1 !== newPassword2){
-            return console.log('password does not match')
-        }
-        console.log(profile)
+        dispatch((updateUser(id, name, email, location, bio)))
+   
     }
     
 
@@ -64,25 +43,12 @@ const ProfileForm = ()=>{
         <Fragment>
               <h1 className="large"> Edit My Profile</h1>
             <form className="form" onSubmit={e=> onSubmitHandler(e)}>
-            {dataReady? <Fragment> 
+              <Fragment> 
                 <div className="form-group">
                 <input type="text" placeholder="Name" name="name" value={name} onChange={e=> onChangeHandler(e)} />
             </div>
             <div className="form-group">
                 <input type="email" placeholder="email" name="emaiil" value={email} onChange={e=> onChangeHandler(e)}/>
-            </div>
-            <div className="form-group">
-                <input type="password" placeholder="password" disabled="disable" name="password" value={password} />
-                
-            </div>
-            <div className="form-group">
-                <input type="checkbox" className="hidden" id="changePW" />
-                <label for="changePW" className="btn"> Change my password </label>
-                <div className="show-on-clicked bg-light my-1">
-                    <input type="password" placeholder="New Password" className="my-1" name="newPassword1" value={newPassword1} onChange={e=> onChangeHandler(e)} />
-                    <input type="password" placeholder="Confirm new password" className=" my-1" name="newPassword2" value={newPassword2} onChange={e=> onChangeHandler(e)}/>
-                </div>
-                
             </div>
 
             <div className="form-group">
@@ -97,7 +63,7 @@ const ProfileForm = ()=>{
                 <input type="submit" className="btn btn-primary-red" value="Submit"/>
             </div>
        
-            </Fragment> : null}
+            </Fragment>
             </form>
         </Fragment>
     )

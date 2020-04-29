@@ -9,6 +9,7 @@ import Logout from './components/Logout'
 import Collections  from './components/Collections/Collections'
 import Collection from './components/Collections/Collection'
 import CollectionForm from './components/Collections/Add-Collections/CollectionForm'
+import Alert from './components/Alert'
 
 import Dashboard from './components/Profile/Dashboard'
 import ProfileForm from './components/Profile/ProfileForm'
@@ -25,8 +26,9 @@ function App() {
       <Fragment>
         <Navbar />
         <Route exact path="/" component={Landing} />
-        
+      
           <section className="container">
+            <Alert />
             <Switch>
               <Route exact path="/login" component={Login} />
               <Route exact path="/logout" component={Logout} />

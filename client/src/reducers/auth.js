@@ -1,4 +1,5 @@
 
+import setAuthToken from '../utilies/setAuthToken'
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: false,
@@ -11,6 +12,7 @@ const auth = (state=initialState, action) => {
         case "LOGIN_SUCCESS":
         case "REGISTER_SUCCESS":
             localStorage.setItem('token', payload)
+            setAuthToken(payload)
             return{
                 ...state,
                 isAuthenticated: true,

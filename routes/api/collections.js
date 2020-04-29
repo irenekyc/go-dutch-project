@@ -3,7 +3,7 @@ const router = express.Router()
 const Theme = require('../../models/Theme')
 const { check, validationResult} = require ('express-validator')
 const auth = require ('../../middleware/auth')
-const Profile = require('../../models/Profile')
+const User = require ('../../models/User')
 
 // @Route           GET api/collections
 // @ Descriptions   Read all collections
@@ -126,10 +126,16 @@ router.post('/createContent/:id', [
 router.post('/addCollections/:id', auth, async (req, res)=>{
     const themeId = req.params.id
     const userId = req.user.id
+    console.log(themeId)
     try{
         const theme = await Theme.findById(themeId)
-        // check if the current User already add this collections to favourites
+        const themeName = theme.name
+       
+        
+       // check if the current User already add this collections to favourites
         const isFollowed = theme.followers.filter(follower=> follower.id === userId)
+      
+        console.log('isFollowed' + isFollowed)
         if (isFollowed.length>0){
             return res.status(400).json({msg: "You have already followed this collection"})
         }
@@ -137,12 +143,11 @@ router.post('/addCollections/:id', auth, async (req, res)=>{
         theme.followers.push(userId)
         await theme.save()
 
-        const curProfile = await Profile.findOne({user: userId})
-        curProfile.favourites.push(themeId)
-        await curProfile.save()
 
+        const curUser = await User.findById(userId)
+        curUser.favourites.push({themeId: themeId, themeName:themeName})
+        await curUser.save()
         res.json(theme)
-
 
     } catch(err){
         console.error(err.message)
@@ -169,10 +174,9 @@ router.delete('/removeCollections/:id', auth, async (req, res)=>{
         theme.followers = theme.followers.filter(follower => follower === userId)
         await theme.save()
 
-        const curProfile = await Profile.findOne({user: userId})
-        curProfile.favourites = curProfile.favourites.filter(fav => fav.id !== themeId)
-        await curProfile.save()
-
+        const curUser = await User.findById(userId)
+        curUser.favourites = curUser.favourites.filter(fav => fav.id !== themeId)
+        await curUser.save()
         res.json(theme)
 
 

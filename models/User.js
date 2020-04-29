@@ -17,8 +17,24 @@ const UserSchema = new mongoose.Schema({
     date:{
         type:Date,
         default: Date.now
-    }
+    },
+    location:{
+        type: String,
+
+    },
+    bio:{
+        type: String,
+    },
+    favourites:
+        [ {themeId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'themes'
+        }, themeName:{
+            type: String
+        }}]
   
+           
+        
 })
 
 module.exports = User = mongoose.model('learners', UserSchema)

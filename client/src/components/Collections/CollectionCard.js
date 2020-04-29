@@ -1,7 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const CollectionCard = ( {data: {name, _id} })=>{
+
+
+const CollectionCard = ( {addFavourite, data: {name, _id} })=>{
+  
 
     return(
         <div className="collection bg-light">
@@ -9,7 +12,7 @@ const CollectionCard = ( {data: {name, _id} })=>{
              <Link to={`collections/${_id}`}> 
              <span className="link-primary"> <strong>{name}</strong></span></Link> 
         </span> 
-        <p className="small link-blue" href="login.html"> <i className="fas fa-plus"></i> Add to my collections </p>
+        <p id={_id} className="small link-blue" onClick={addFavourite}> <i className="fas fa-plus"></i> Add to my collections </p>
     </div>
     )
 

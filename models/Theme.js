@@ -23,9 +23,9 @@ const ThemeSchema = new mongoose.Schema ({
         {
             users:  {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'profile' }
+                ref: 'learners' }
         }
         ],
 })
 
-module.exports = Theme = mongoose.model('theme', ThemeSchema)
+module.exports = Theme = mongoose.model('themes', ThemeSchema)
